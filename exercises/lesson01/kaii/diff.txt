@@ -1,0 +1,289 @@
+Binary files ./build/boot_s.o and /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/build/boot_s.o differ
+Binary files ./build/kernel8.elf and /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/build/kernel8.elf differ
+Binary files ./build/kernel_c.o and /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/build/kernel_c.o differ
+Binary files ./build/kernel-qemu.elf and /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/build/kernel-qemu.elf differ
+Only in .: build.bat
+Only in /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen: config.txt
+Only in .: diff.txt
+Only in /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen: .gitignore
+diff -r ./include/mm.h /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/include/mm.h
+1,2c1,2
+< #ifndef	_MM_H
+< #define	_MM_H
+---
+> #ifndef _MM_H
+> #define _MM_H
+4,6c4,6
+< #define PAGE_SHIFT	 		12
+< #define TABLE_SHIFT 			9
+< #define SECTION_SHIFT			(PAGE_SHIFT + TABLE_SHIFT)
+---
+> #define PAGE_SHIFT 12
+> #define TABLE_SHIFT 9
+> #define SECTION_SHIFT (PAGE_SHIFT + TABLE_SHIFT)
+8,9c8,9
+< #define PAGE_SIZE   			(1 << PAGE_SHIFT)	
+< #define SECTION_SIZE			(1 << SECTION_SHIFT)	
+---
+> #define PAGE_SIZE (1 << PAGE_SHIFT)
+> #define SECTION_SIZE (1 << SECTION_SHIFT)
+11c11
+< #define LOW_MEMORY              	(2 * SECTION_SIZE)
+---
+> #define LOW_MEMORY (2 * SECTION_SIZE)
+19c19
+< #endif  /*_MM_H */
+---
+> #endif /*_MM_H */
+diff -r ./include/peripherals/base.h /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/include/peripherals/base.h
+4d3
+< // version 4B
+diff -r ./include/peripherals/gpio.h /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/include/peripherals/gpio.h
+1,2c1,2
+< #ifndef	_P_GPIO_H
+< #define	_P_GPIO_H
+---
+> #ifndef _P_GPIO_H
+> #define _P_GPIO_H
+6,10c6,10
+< #define GPFSEL1         (PBASE+0x00200004)
+< #define GPSET0          (PBASE+0x0020001C)
+< #define GPCLR0          (PBASE+0x00200028)
+< #define GPPUD           (PBASE+0x00200094)
+< #define GPPUDCLK0       (PBASE+0x00200098)
+---
+> #define GPFSEL1 (PBASE + 0x00200004)
+> #define GPSET0 (PBASE + 0x0020001C)
+> #define GPCLR0 (PBASE + 0x00200028)
+> #define GPPUD (PBASE + 0x00200094)
+> #define GPPUDCLK0 (PBASE + 0x00200098)
+12c12
+< #endif  /*_P_GPIO_H */
+---
+> #endif /*_P_GPIO_H */
+Only in /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/include/peripherals: mini_uart.h
+diff -r ./include/peripherals/uart.h /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/include/peripherals/uart.h
+1,2c1,2
+< #ifndef	_P_UART_H
+< #define	_P_UART_H
+---
+> #ifndef _P_UART_H
+> #define _P_UART_H
+6c6,13
+< #define UART_BASE     (PBASE+0x00201000)
+---
+> #define UART_BASE (PBASE + 0x201000)
+> #define UART_DR (UART_BASE)
+> #define UART_FR (UART_BASE + 0x18)
+> #define UART_IBRD (UART_BASE + 0x24)
+> #define UART_FBRD (UART_BASE + 0x28)
+> #define UART_CR (UART_BASE + 0x30)
+> #define UART_LCRH (UART_BASE + 0x2c)
+> #define UART_IMSC (UART_BASE + 0x18)
+8,15c15,16
+< #define UART_DR       (UART_BASE + 0x00)
+< #define UART_FR       (UART_BASE + 0x18)
+< #define UART_IBRD     (UART_BASE + 0x24)
+< #define UART_FBRD     (UART_BASE + 0x28)
+< #define UART_LCRH     (UART_BASE + 0x2C)
+< #define UART_CR       (UART_BASE + 0x30)
+< #define UART_IMSC     (UART_BASE + 0x38)
+< #define UART_MIS      (UART_BASE + 0x40)
+---
+> #define CORE_FREQ 250
+> #define BAUD_FREQ 115200
+17,18c18
+< 
+< #endif  /*_P_UART_H */
+---
+> #endif /*_P_UART_H */
+diff -r ./include/uart.h /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/include/uart.h
+1,2c1,2
+< #ifndef	_UART_H
+< #define	_UART_H
+---
+> #ifndef _UART_H
+> #define _UART_H
+4,6c4,6
+< void uart_init ( void );
+< char uart_recv ( void );
+< void uart_send ( char c );
+---
+> void uart_init(void);
+> char uart_recv(void);
+> void uart_send(char c);
+7a8
+> unsigned int get_reg_baud(unsigned int core_freq, unsigned int baud);
+9c10
+< #endif  /*_UART_H */
+---
+> #endif
+diff -r ./include/utils.h /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/include/utils.h
+1,2c1,2
+< #ifndef	_BOOT_H
+< #define	_BOOT_H
+---
+> #ifndef _BOOT_H
+> #define _BOOT_H
+4,6c4,6
+< extern void delay ( unsigned long);
+< extern void put32 ( unsigned long, unsigned int );
+< extern unsigned int get32 ( unsigned long );
+---
+> extern void delay(unsigned long);
+> extern void put32(unsigned long, unsigned int);
+> extern unsigned int get32(unsigned long);
+8c8
+< #endif  /*_BOOT_H */
+---
+> #endif /*_BOOT_H */
+Binary files ./kernel8.img and /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/kernel8.img differ
+Binary files ./kernel-qemu.img and /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/kernel-qemu.img differ
+diff -r ./src/boot.S /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/src/boot.S
+1c1
+< #include "mm.h"
+---
+>     #include "mm.h"
+3c3
+< .section ".text.boot"
+---
+>     .section ".text.boot"
+5c5
+< .globl _start
+---
+>     .globl _start
+7,13c7,10
+< 	mrs	x0, mpidr_el1		
+< 	and	x0, x0,#0xFF		// Check processor id
+< 	cbz	x0, master		// Hang for all non-primary CPU
+< 	b	proc_hang
+< 
+< proc_hang: 
+< 	b 	proc_hang
+---
+>     mrs     x0, mpidr_el1
+>     and     x0, x0,#0xFF
+>     cbz     x0, master
+>     b       slave
+16,19c13,21
+< 	adr	x0, bss_begin
+< 	adr	x1, bss_end
+< 	sub	x1, x1, x0
+< 	bl 	memzero
+---
+>     adr     x0, bss_begin
+>     adr     x1, bss_end
+>     sub     x1, x1, x0
+>     bl      memzero
+> 
+>     mov     sp, #LOW_MEMORY
+>     mrs     x0, mpidr_el1
+>     and     x0, x0,#0xFF
+>     bl      kernel_main
+21,23c23,31
+< 	mov	sp, #LOW_MEMORY 
+< 	bl	kernel_main
+< 	b 	proc_hang		// should never come here
+---
+> slave:
+>     mov     sp, #LOW_MEMORY
+>     mrs     x0, mpidr_el1
+> 	  and     x0, x0,#0xFF
+>     lsl     x0, x0, #15
+>     bl      delay
+>     mrs     x0, mpidr_el1
+> 	  and     x0, x0,#0xFF
+>     bl      kernel_main
+Only in ./src: config.txt
+diff -r ./src/kernel.c /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/src/kernel.c
+3,6c3,9
+< void kernel_main(void)
+< {
+< 	uart_init();
+< 	uart_send_string("Hello, world!\r\n");
+---
+> void kernel_main(unsigned long id) {
+>     if(id == 0) {
+>         uart_init();
+>     }
+>     uart_send_string("Hello from processor ");
+>     uart_send(id + 48);
+>     uart_send_string(".\r\n");
+8,10c11,13
+< 	while (1) {
+< 		uart_send(uart_recv());
+< 	}
+---
+>     while (1) {
+>         uart_send(uart_recv());
+>     }
+diff -r ./src/linker.ld /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/src/linker.ld
+3,10c3,10
+< 	.text.boot : { *(.text.boot) }
+< 	.text : { *(.text) }
+< 	.rodata : { *(.rodata) }
+< 	.data : { *(.data) }
+< 	. = ALIGN(0x8);
+< 	bss_begin = .;
+< 	.bss : { *(.bss*) } 
+< 	bss_end = .;
+---
+>     .text.boot : { *(.text.boot) }
+>     .text : { *(.text) }
+>     .rodata : { *(.rodata) }
+>     .data : { *(.data) }
+>     . = ALIGN(0x8);
+>     bss_begin = .;
+>     .bss : { *(.bss*) }
+>     bss_end = .;
+diff -r ./src/mm.S /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/src/mm.S
+1c1
+< .globl memzero
+---
+> 	.globl memzero
+diff -r ./src/utils.S /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/src/utils.S
+1c1
+< .globl put32
+---
+>     .globl put32
+3,4c3,4
+< 	str w1,[x0]
+< 	ret
+---
+>     str w1, [x0]
+>     ret
+6c6
+< .globl get32
+---
+>     .globl get32
+8,9c8,9
+< 	ldr w0,[x0]
+< 	ret
+---
+>     ldr w0, [x0]
+>     ret
+11c11
+< .globl delay
+---
+>     .globl delay
+13,15c13,15
+< 	subs x0, x0, #1
+< 	bne delay
+< 	ret
+---
+>     subs x0, x0, #1
+>     bne delay
+>     ret
+diff -r ./start.sh /home/kaii/Documents/code/raspberry-pi-os/exercises/lesson01/2/evopen/start.sh
+2a3,4
+> ./build.sh
+> 
+6,8c8,10
+< #   qemu-system-aarch64 -M raspi3b -smp 4 -nographic -kernel kernel-qemu.img
+<   qemu-system-aarch64 -M raspi3b -serial null -serial mon:stdio -nographic -kernel kernel-qemu.img
+< fi
+\ No newline at end of file
+---
+>   qemu-system-aarch64 -M raspi3b -smp 4 -nographic -kernel kernel-qemu.img
+> fi
+> 
